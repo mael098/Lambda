@@ -5,7 +5,7 @@ from typing import Optional, TypeVar, Iterable, Callable, TypedDict, cast
 class User(TypedDict):
     firstname: str
     lastname: str
-    username: str
+    username: Optional[str]
     email: str
     age: int
     id: int
@@ -22,12 +22,7 @@ def find(iter: Iterable[T], fn: Callable[[T], bool]) -> Optional[T]:
 with open(os.path.join('db', 'users.json')) as f:
     data = cast(list[User], json.load(f))
     
-print('Users:')
-
-
 user20 = find(data, lambda x: x['id'] == 3)
 
-
-
-
 print(user20)
+
