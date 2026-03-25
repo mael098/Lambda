@@ -1,4 +1,4 @@
-from typing import Optional, TypeVar, Callable, TypedDict, cast, Generic
+from typing import Optional, TypeVar, Callable, TypedDict, cast, Generic, Union
 import json
 import os
 
@@ -20,34 +20,47 @@ class Pipe(Generic[T]):
         self.process = []
         self.items = items
     
-    def map_if(self, cn: Callable[[T], bool], tr: Callable[[T, Pipe[T]], T]):
+    def map_if(self, cn: Callable[[T], bool], tr: Union[Callable[[T], T],Callable[[T, Pipe[T]], T]]):
         for i in range(len(self.items)):
             if cn(self.items[i]):
-                self.items[i] = tr(self.items[i], self)
+                try:
+                    self.items[i] = tr(self.items[i], self) # pyright: ignore[reportCallIssue]
+                except TypeError:
+                    self.items[i] = tr(self.items[i]) # pyright: ignore[reportCallIssue]
                 
         return self
     
-    def map(self, fn: Callable[[T, Pipe[T]], T]):
+    def map(self, fn: Union[Callable[[T], T],Callable[[T, Pipe[T]], T]]):
         for i in range(len(self.items)):
-            self.items[i] = fn(self.items[i], self)
-            
+            try:
+                self.items[i] = fn(self.items[i], self) # pyright: ignore[reportCallIssue]
+            except TypeError:
+                self.items[i] = fn(self.items[i]) # pyright: ignore[reportCallIssue]
         return self
     
-    def filter(self, fn: Callable[[T, Pipe[T]], bool]):
+    def filter(self, fn: Union[Callable[[T], bool], Callable[[T, Pipe[T]], bool]]):
         nitems: list[T] = []
         
         for i in range(len(self.items)):
-            if fn(self.items[i], self):
-                nitems.append(self.items[i])
+            try:
+                if fn(self.items[i], self): # pyright: ignore[reportCallIssue]
+                    nitems.append(self.items[i])
+            except TypeError:
+                if fn(self.items[i]): # pyright: ignore[reportCallIssue]
+                    nitems.append(self.items[i])
                 
         return Pipe(nitems)
 
     def to_list(self):
         return self.items
     
-    def find(self, fn: Callable[[T, Pipe[T]], bool]) -> Optional[T]:
+    def find(self, fn: Union[Callable[[T], bool], Callable[[T, Pipe[T]], bool]]) -> Optional[T]:
         for item in self.items:
-            if fn(item, self):
-                return item
+            try:
+                if fn(item, self): # pyright: ignore[reportCallIssue]
+                    return item
+            except TypeError:
+                if fn(item): # pyright: ignore[reportCallIssue]
+                    return item
         return None
     
