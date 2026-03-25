@@ -20,25 +20,34 @@ class Pipe(Generic[T]):
         self.process = []
         self.items = items
     
-    def map_if(self, cn: Callable[[T], bool], tr: Callable[[T], T]):
+    def map_if(self, cn: Callable[[T], bool], tr: Callable[[T, Pipe[T]], T]):
         for i in range(len(self.items)):
             if cn(self.items[i]):
-                self.items[i] = tr(self.items[i])
+                self.items[i] = tr(self.items[i], self)
+                
         return self
     
-    def map(self, fn: Callable[[T], T]):
-        self.items = list(map(fn, self.items))
+    def map(self, fn: Callable[[T, Pipe[T]], T]):
+        for i in range(len(self.items)):
+            self.items[i] = fn(self.items[i], self)
+            
         return self
     
-    def filter(self, fn: Callable[[T], bool]):
-        self.items = list(filter(fn, self.items))
-        return self
+    def filter(self, fn: Callable[[T, Pipe[T]], bool]):
+        nitems: list[T] = []
+        
+        for i in range(len(self.items)):
+            if fn(self.items[i], self):
+                nitems.append(self.items[i])
+                
+        return Pipe(nitems)
 
     def to_list(self):
-        return list(self.items)
+        return self.items
     
-    def find(self, fn: Callable[[T], bool]) -> Optional[T]:
+    def find(self, fn: Callable[[T, Pipe[T]], bool]) -> Optional[T]:
         for item in self.items:
-            if fn(item):
+            if fn(item, self):
                 return item
         return None
+    
