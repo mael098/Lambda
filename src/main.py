@@ -18,6 +18,9 @@ with open(os.path.join('db', 'users.json')) as f:
 # ----------------------------
 # ----------- FIND -----------
 # ----------------------------
+"""
+Se busca un usuario especifico por su id
+"""
 user30 = pipe(data).find(lambda u: u['id'] == 30)
 
 print('User 30')
@@ -42,6 +45,12 @@ print(anonimous)
 # ----------------------------
 # --- FILTER, MAP Y MAP_IF ---
 # ----------------------------
+"""
+Se filtran todos los usuarios mayores de 18 años
+se le agrega un email a los que no tienen
+y se normaliza el username colocandolo en minusculas
+con el fin de simular un pipeline en un servidor
+"""
 normalized = pipe(data)\
     .filter(lambda u: u['age'] >= 18)\
     .map_if(
