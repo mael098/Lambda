@@ -1,20 +1,7 @@
-from typing import Optional, TypeVar, Callable, TypedDict, cast, Generic, Union
-import json
-import os
-
-class User(TypedDict):
-    firstname: str
-    lastname: str
-    username: Optional[str]
-    email: str
-    age: int
-    id: int
+from typing import Optional, TypeVar, Callable, Generic, Union
 
 T = TypeVar("T")
 
-with open(os.path.join('db', 'users.json')) as f:
-    data = cast(list[User], json.load(f))
-    
 class Pipe(Generic[T]):
     def __init__(self, items: list[T]):
         self.process = []
@@ -63,4 +50,3 @@ class Pipe(Generic[T]):
                 if fn(item): # pyright: ignore[reportCallIssue]
                     return item
         return None
-    
