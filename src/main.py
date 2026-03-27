@@ -1,5 +1,5 @@
 from typing import Optional, TypedDict, cast
-from rich import print
+# from rich import print
 import json
 import os
 from classes.pipe import pipe
