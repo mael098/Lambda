@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Optional, TypeVar, Callable, Generic, Union
 
 T = TypeVar("T")
@@ -8,7 +9,7 @@ class pipe(Generic[T]):
     def __init__(self, items: list[T]):
         self.items = items.copy()
     
-    def map_if(self, cn: Callable[[T], bool], tr: Union[Callable[[T], T], Callable[[T, "pipe[T]"], T]]):
+    def map_if(self, cn: Callable[[T], bool], tr: Union[Callable[[T], T], Callable[[T, pipe[T]], T]]):
         for i in range(len(self.items)):
             if cn(self.items[i]):
                 try:
@@ -18,7 +19,7 @@ class pipe(Generic[T]):
                 
         return self
     
-    def map(self, fn: Union[Callable[[T], U], Callable[[T, "pipe[T]"], U]]) -> "pipe[U]":
+    def map(self, fn: Union[Callable[[T], U], Callable[[T, "pipe[T]"], U]]) -> pipe[U]:
         new_items: list[U] = []
         for item in self.items:
             try:
@@ -28,7 +29,7 @@ class pipe(Generic[T]):
                 
         return pipe(new_items)
     
-    def filter(self, fn: Union[Callable[[T], bool], Callable[[T, "pipe[T]"], bool]]):
+    def filter(self, fn: Union[Callable[[T], bool], Callable[[T, pipe[T]], bool]]):
         nitems: list[T] = []
         
         for i in range(len(self.items)):
@@ -44,7 +45,7 @@ class pipe(Generic[T]):
     def to_list(self):
         return self.items
     
-    def find(self, fn: Union[Callable[[T], bool], Callable[[T, "pipe[T]"], bool]]) -> Optional[T]:
+    def find(self, fn: Union[Callable[[T], bool], Callable[[T, pipe[T]], bool]]) -> Optional[T]:
         for item in self.items:
             try:
                 if fn(item, self): # pyright: ignore[reportCallIssue]

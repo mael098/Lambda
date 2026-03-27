@@ -56,14 +56,14 @@ con el fin de simular un pipeline en un servidor
 normalized = pipe(data)\
     .filter(lambda u: u['age'] >= 18)\
     .map_if(
-        lambda u: not u['email'], 
-        lambda u: { 
-            **u, 
-            'email': f'{u['firstname'].lower()}_{u['lastname'].lower()}@enterprice.com' 
+        lambda u: not u['email'],
+        lambda u: {
+            **u,
+            'email': f'{u['firstname'].lower()}_{u['lastname'].lower()}@enterprice.com'
         }
     )\
-    .map(lambda u: { 
-        **u, 
+    .map(lambda u: {
+        **u,
         'username': u['username'].lower()
     })\
     .to_list()
