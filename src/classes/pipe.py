@@ -31,13 +31,13 @@ class pipe(Generic[T]):
     def filter(self, fn: Union[Callable[[T], bool], Callable[[T, "pipe[T]"], bool]]):
         nitems: list[T] = []
         
-        for i in range(len(self.items)):
+        for item in self.items:
             try:
-                if fn(self.items[i], self): # pyright: ignore[reportCallIssue]
-                    nitems.append(self.items[i])
+                if fn(item, self): # pyright: ignore[reportCallIssue]
+                    nitems.append(item)
             except TypeError:
-                if fn(self.items[i]): # pyright: ignore[reportCallIssue]
-                    nitems.append(self.items[i])
+                if fn(item): # pyright: ignore[reportCallIssue]
+                    nitems.append(item)
                 
         return pipe(nitems)
 
@@ -53,3 +53,5 @@ class pipe(Generic[T]):
                 if fn(item): # pyright: ignore[reportCallIssue]
                     return item
         return None
+
+            
