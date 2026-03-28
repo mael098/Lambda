@@ -1,4 +1,4 @@
-import { fa, Faker, faker } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 import { User } from "#/classes/user.ts";
 import { writeFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
