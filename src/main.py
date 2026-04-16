@@ -1,10 +1,10 @@
 from typing import Optional, TypedDict, cast
-# from rich import print
+from rich import print
 import json
 import os
 from classes.pipe import pipe
-import numpy as np
-import matplotlib.pyplot as plt
+# import numpy as np
+# import matplotlib.pyplot as plt
 
 class User(TypedDict):
     firstname: str
@@ -78,33 +78,33 @@ print("-------------------------------------------------------------------------
 
 
 
-matrix = np.array([
-    [u['age'], 1 if u['email'] else 0]
-    for u in normalized
-], dtype=float)
+# matrix = np.array([
+#     [u['age'], 1 if u['email'] else 0]
+#     for u in normalized
+# ], dtype=float)
 
-print("\nMatriz de usuarios [edad, tiene_email]:")
-print(matrix.tolist())
+# print("\nMatriz de usuarios [edad, tiene_email]:")
+# print(matrix.tolist())
 
 
-weights = np.array([1, 1]) # importancia de edad y email
+# weights = np.array([1, 1]) # importancia de edad y email
 
-scores = matrix @ weights
+# scores = matrix @ weights
 
-print("\nScore de usuarios:")
-print(scores)
-top_users = sorted(
-    zip(normalized, scores),
-    key=lambda x: x[1],
-    reverse=True
-)
+# print("\nScore de usuarios:")
+# print(scores)
+# top_users = sorted(
+#     zip(normalized, scores),
+#     key=lambda x: x[1],
+#     reverse=True
+# )
 
-print("\nTop usuarios:")
-for user, score in top_users[:5]:
-    print(user['username'], score)
+# print("\nTop usuarios:")
+# for user, score in top_users[:5]:
+#     print(user['username'], score)
 
-plt.bar(range(len(scores)), scores) # type: ignore
-plt.title("Score de usuarios")# type: ignore
-plt.xlabel("Usuario")# type: ignore
-plt.ylabel("Score")# type: ignore
-plt.show()# type: ignore
+# plt.bar(range(len(scores)), scores) # type: ignore
+# plt.title("Score de usuarios")# type: ignore
+# plt.xlabel("Usuario")# type: ignore
+# plt.ylabel("Score")# type: ignore
+# plt.show()# type: ignore
