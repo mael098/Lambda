@@ -27,6 +27,7 @@ user30 = pipe(data).find(lambda u: u['id'] == 30)
 
 print('User 30')
 print(json.dumps(user30, indent=4))
+input()
 
 # ----------------------------
 # ------- FILTER y MAP -------
@@ -43,6 +44,7 @@ anonimous = pipe(data)\
 print()
 print('Usuarios anonimos:')
 print(anonimous)
+input()
 
 # ----------------------------
 # --- FILTER, MAP Y MAP_IF ---
